@@ -12,6 +12,8 @@
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="static/css/main.css" />
 		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<script src="https://d3plus.org/js/d3.js"></script><!-- https: added -->
+		<script src="https://d3plus.org/js/d3plus.js"></script><!-- https: added -->
 		<script src="https://code.jquery.com/jquery-3.2.1.js"
 		  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
 		  crossorigin="anonymous"></script>
@@ -67,6 +69,88 @@
 						</div>
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span class="image fit"><img src="static/images/pic01.jpg" alt="" /></span>
+							<style>
+								.axis path,
+								.axis line {
+								    fill: none;
+								    stroke: #eee;
+								    shape-rendering: crispEdges;
+								}
+								 
+								.axis text {
+								    font-family: sans-serif;
+								    font-size: 11px;
+								}
+								 
+								.loading {
+								    font-family: sans-serif;
+								    font-size: 15px;
+								}
+								 
+								.circle {
+								    fill: #222;
+								}
+							</style>
+							<div id="viz"></div>
+							<script>
+								d3.csv("/../testDisplay.csv", function(data) {
+								    for (var i = 0; i < data.length; i++) {
+								    	console.log(data[i], " ", i)
+								        var visualization = d3plus.viz()
+							  				.data(data)
+											.container("#viz")
+							  				.type("scatter")
+							  				.id("type")
+							  				.x("sentiment")
+							  				.y("keyword")
+											// .draw(sentiments);
+							    	}	
+
+							    	// function sentiments() {
+							    	// 	console.log("sentiments");
+							    	// 	console.log(d3.select("#scatterplot_id").selectAll(".d3plus_data"));
+							    	// }
+								});
+								var w = 940,
+							    h = 300,
+							    pad = 20,
+							    left_pad = 100,
+							    Data_url = '/../testDisplay.csv';
+
+							    var svg = d3.select("#viz")
+						        .append("svg")
+						        .attr("width", w)
+						        .attr("height", h);
+
+						        var x = d3.scale.linear().domain([0, 23]).range([left_pad, w-pad]),
+    							y = d3.scale.linear().domain([0, 6]).range([pad, h-pad*2]);
+
+    							var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+    							yAxis = d3.svg.axis().scale(y).orient("left");
+
+    							svg.append("g")
+							    .attr("class", "axis")
+							    .attr("transform", "translate(0, "+(h-pad)+")")
+							    .call(xAxis);
+							 
+							svg.append("g")
+							    .attr("class", "axis")
+							    .attr("transform", "translate("+(left_pad-pad)+", 0)")
+							    .call(yAxis);
+
+							   	// var xAxis = d3.svg.axis().scale(x).orient("bottom")
+						     //    .ticks(24)
+						     //    .tickFormat(function (d, i) {
+						     //        var m = (d &gt, 12) ? "p" : "a";
+						     //        return (d%12 == 0) ? 12+m :  d%12+m;
+						     //    }),
+						    	// yAxis = d3.svg.axis().scale(y).orient("left")
+						     //    .ticks(7)
+						     //    .tickFormat(function (d, i) {
+						     //    	console.log(data_url['keyword'].asList())
+						     //        return data_url['keyword'].asList()[d];
+						     //    });
+							</script>
 						</div>
 					</div>
 				</div>
