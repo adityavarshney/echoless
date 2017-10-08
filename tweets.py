@@ -13,8 +13,8 @@ USER = api.GetUser(screen_name='A_Varshn007')
 USER_ID = USER.id
 
 # user's own tweets
-def process_user_tweets():
-	t = api.GetUserTimeline(USER_ID, count=10)
+def process_user_tweets(userid = USER.id, count = 10):
+	t = api.GetUserTimeline(userid, count)
 	tweets = [i.AsDict() for i in t]
 	return tweets
 
