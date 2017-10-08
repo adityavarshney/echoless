@@ -26,12 +26,14 @@ def createIndexScores():
 
 createIndexScores()
 
-#writing to csv files
-with open('allSenatorTweetsAndScores.csv', 'w', encoding='utf-8',) as csv_file:
-	writer = csv.writer(csv_file)
-	for key, value in tweetScore.items():
-		writer.writerow([key, value])
+def recreateSenatorTweetsAndScores():
+	#writing to csv files
+	with open('allSenatorTweetsAndScores.csv', 'w', encoding='utf-8',) as csv_file:
+		writer = csv.writer(csv_file)
+		for key, value in tweetScore.items():
+			writer.writerow([key, value])
 
+#recreateSenatorTweetsAndScores()
 
 #returns a list of strings
 def getAllTweetText():
