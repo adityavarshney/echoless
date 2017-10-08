@@ -10,13 +10,8 @@ api = twitter.Api(consumer_key='EmONxqVj70y1d6wF3SdxwXzf4',
 def process_user_tweets(username, count = 10):
 	user = api.GetUser(screen_name=username)
 	user_id = user.id
-	t = api.GetUserTimeline(user_id, count)
+	t = api.GetUserTimeline(user_id, count, exclude_replies=True)
 	tweets = [i.AsDict() for i in t]
-	own_tweets = []
-	for tweet in tweets:
-		tweet_json = tweet_to_json(tweet)
-		own_tweets.append(tweet_json)
-	return own_tweets
 	return tweets
 
 # user's friends' IDs to get their tweets
@@ -26,7 +21,7 @@ def process_friends_tweets(username, count=10, friends_count=10):
 	friends = api.GetFriendIDs(user_id)[:friends_count]
 	all_friends_tweets = [] 
 	for f in friends:
-		f_t = api.GetUserTimeline(f, count=count)
+		f_t = api.GetUserTimeline(f, count=count, exclude_replies=True)
 		f_tweets = [i.AsDict() for i in f_t]
 		for tweet in f_tweets:
 			tweet_json = tweet_to_json(tweet)

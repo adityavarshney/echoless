@@ -41,4 +41,4 @@ def getAllTweetText():
 			allTweetText.append(i['text']) 
 	return allTweetText
 
-print(getAllTweetText())
+# print(getAllTweetText())
