@@ -56,6 +56,8 @@
 							  		return jqXHR.responseText;
 							  	}
 							  	$('#handleButton').click(function() {
+							  		$("#img1").hide();
+							  		$("#img2").show();
 							  		var handleID = document.getElementById('handleID').value;
 							  		if (handleID.length != 0) {
 							  			if (handleID.substring(0,1) === "@") {
@@ -64,7 +66,7 @@
 							  		}
 							  		var result = getHandle(handleID);
 							  		result = JSON.parse(result);
-							  		$("#img1").hide();
+							  		$("#img2").hide();
 							  		var keywords_pairs = [];
 							  		var keywords = Object.keys(result);
 							  		for (var i = 0; i < 5; i++) {
@@ -122,6 +124,7 @@
 						</div>
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span id='img1' class="image fit"><img src="static/images/pic01.jpg" alt="" /></span>
+							<span id='img2' class="image fit"><img src="static/images/loading.gif" alt="" /></span>
 							<style>
 								.axis path,
 								.axis line {
@@ -142,6 +145,10 @@
 								 
 								.circle {
 								    fill: #222;
+								}
+
+								#img2 {
+									display: none;
 								}
 							</style>
 							<div id="viz"></div>
