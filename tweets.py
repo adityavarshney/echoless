@@ -16,7 +16,11 @@ USER_ID = USER.id
 def process_user_tweets(userid = USER.id, count = 10):
 	t = api.GetUserTimeline(userid, count)
 	tweets = [i.AsDict() for i in t]
-	return tweets
+	own_tweets = []
+	for tweet in tweets:
+		tweet_json = tweet_to_json(tweet)
+		own_tweets.append(tweet_json)
+	return own_tweets
 
 # user's friends' IDs to get their tweets
 def process_friends_tweets():

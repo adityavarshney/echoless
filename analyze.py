@@ -1,32 +1,39 @@
-import json
-from watson_developer_cloud import NaturalLanguageUnderstandingV1
-import watson_developer_cloud.natural_language_understanding.features.v1 \
-  as Features
+# Imports the Google Cloud client library
+from google.cloud import language
+from google.cloud.language import enums
+from google.cloud.language import types
 
-username = "a540517a-242d-48a7-9efd-7d508cbe0268"
-password = "Z6xSAluM2q1s"
+# Instantiates a client
+client = language.LanguageServiceClient()
 
-natural_language_understanding = NaturalLanguageUnderstandingV1(
-  username=username,
-  password=password,
-  version="2017-02-27")
+# Maps from entity name to a list of entity_infos with that name
+# Each entity_info contains its type, count, sentiment score sum, sentiment magnitude sum, and salience sum
+entities_map = {}
 
-def analyze_tweet(tweet):
-	response = natural_language_understanding.analyze(
-	  text=tweet,
-	  features=[
-	    Features.Entities(
-	      sentiment=True,
-	      limit=3
-	    ),
-	    Features.Concepts(
-	      limit=3
-	    ),
-	    Features.Keywords(
-	      sentiment=True,
-	      limit=3
-	    )
-	  ]
-	)
+def google_analyze_entity_sentiment(tweet):
+	document = types.Document(
+	    content=tweet,
+	    type=enums.Document.Type.PLAIN_TEXT)
+	entities = client.analyze_entity_sentiment(document).entities
+	entity_type = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION',
+                   'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
+	for entity in entities:
+		name = entity.name
+		entity_type = entity_type[entity.type]
+		entity_info = get_entity_info(name, entity_type)
+		entity_info['count'] += 1
+		entity_info['salience_sum'] += entity.salience
+		entity_info['score_sum'] += entity.sentiment.score
+		entity_info['magnitude_sum'] += entity.sentiment.magnitude
 
-	print(json.dumps(response, indent=2))
+def get_entity_info(name, entity_type):
+	if name not in entities_map:
+		entities_map[name] = []
+	entity_info = None
+	for e in entities_map[name]:
+		if e['type'] == entity_type:
+			return e
+	entity_info = {'type': entity_type, 'count': 0, 'salience_sum': 0, 'score_sum': 0, 'magnitude_sum': 0}
+	entities_map[name].append(entity_info)
+	return entity_info
+

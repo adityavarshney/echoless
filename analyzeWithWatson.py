@@ -55,8 +55,9 @@ def understand_language(tweet):
 	    Features.Categories()
 	  ]
 	)
-
+	# json.dumps({key: value, key2 : value2, ...}, )
 	print(json.dumps(response, indent=2))
+	return response
 
 def classify_language(tweet):
 	return
