@@ -1,5 +1,8 @@
 ## Welcome to Echoless
 
-This script analyzes a given twitterHandle's feed to understand the data a person is surrounded with, based off of the friends they follow. Using natural language processing and machine learning classification, we can also gain an understanding of how much "echo" a given twitterhandle has by comparing how similar the posts and the posts they follow are. 
+This script analyzes the twitter feed of a given handle to calculate sentiments using the contents of posts on the feed. Using natural language processing and machine learning classification, echoless alerts users to potential biases in their feed and exposes their leanings on various political and trending topics.
 
-### main.py
+### Prerequisites
+
+To use `main.py`, you will need Google Application Credentials in order to make calls to the Google Cloud and Machine Learning APIs. 
+
