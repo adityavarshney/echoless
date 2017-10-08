@@ -12,11 +12,11 @@ def process_user_tweets(username, count = 10):
 	user_id = user.id
 	t = api.GetUserTimeline(user_id, count)
 	tweets = [i.AsDict() for i in t]
-	# own_tweets = []
-	# for tweet in tweets:
-	# 	tweet_json = tweet_to_json(tweet)
-	# 	own_tweets.append(tweet_json)
-	# return own_tweets
+	own_tweets = []
+	for tweet in tweets:
+		tweet_json = tweet_to_json(tweet)
+		own_tweets.append(tweet_json)
+	return own_tweets
 	return tweets
 
 # user's friends' IDs to get their tweets
@@ -47,3 +47,12 @@ def tweet_to_json(tweet):
 		tweet_info['media_url'] = tweet['media'][0]['media_url_https']
 		tweet_info['media_type'] = tweet['media'][0]['type']
 	return json.dumps(tweet_info)
+
+
+# user's own tweets
+def process_user_tweets_training(username, count = 10):
+	user = api.GetUser(screen_name=username)
+	user_id = user.id
+	t = api.GetUserTimeline(user_id, count)
+	tweets = [i.AsDict() for i in t]
+	return tweets

@@ -2,14 +2,14 @@
 import csv
 import pandas as pd
 import twitter
-from tweets import process_user_tweets, api, tweet_to_json
+from tweets import process_user_tweets_training, api
 
 df1 = pd.read_csv("senatorTwitterHandles.csv")
 
 senatorTweets = {}
 for senatorHandle in df1['TwitterHandles']:
 	USER = api.GetUser(screen_name=senatorHandle)
-	tweets = process_user_tweets(USER.id, 300) #list of 300 tweets
+	tweets = process_user_tweets_training(senatorHandle, 300) #list of 300 tweets
 	senatorTweets[senatorHandle] = tweets
 
 senatorIndex = {}
@@ -24,7 +24,7 @@ def createIndexScores():
 		for tweet in senatorTweets[senatorHandle]:
 			tweetScore[tweet['text']] = senatorIndex[senatorHandle] 
 
-createIndexScores()
+#createIndexScores()
 
 #writing to csv files
 with open('allSenatorTweetsAndScores.csv', 'w') as csv_file:
@@ -33,3 +33,12 @@ with open('allSenatorTweetsAndScores.csv', 'w') as csv_file:
 		writer.writerow([key, value])
 
 
+#returns a list of strings
+def getAllTweetText():
+	allTweetText = []
+	for senatorHandle in df1['TwitterHandles']:
+		for i in senatorTweets[senatorHandle]:
+			allTweetText.append(i['text']) 
+	return allTweetText
+
+print(getAllTweetText())

@@ -1,6 +1,7 @@
 from tweets import process_friends_tweets, process_user_tweets
 from analyze import google_analyze_entity_sentiment, get_top_n
 
+
 def run(username):
 	# google_analyze_entity_sentiment("I hate taxes they make me pay money to the government which I also hate", {})
 	print("Getting friends' tweets...")
