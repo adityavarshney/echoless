@@ -93,7 +93,7 @@
 							</style>
 							<div id="viz"></div>
 							<script>
-								d3.csv("/../testDisplay.csv", function(data) {
+								d3.csv("testDisplay.csv", function(data) {
 								    for (var i = 0; i < data.length; i++) {
 								    	console.log(data[i], " ", i)
 								        var visualization = d3plus.viz()
@@ -111,46 +111,46 @@
 							    	// 	console.log(d3.select("#scatterplot_id").selectAll(".d3plus_data"));
 							    	// }
 								});
-								var w = 940,
-							    h = 300,
-							    pad = 20,
-							    left_pad = 100,
-							    Data_url = '/../testDisplay.csv';
+							// 	var w = 940,
+							//     h = 300,
+							//     pad = 20,
+							//     left_pad = 100,
+							//     Data_url = 'testDisplay.csv';
 
-							    var svg = d3.select("#viz")
-						        .append("svg")
-						        .attr("width", w)
-						        .attr("height", h);
+							//     var svg = d3.select("#viz")
+						 //        .append("svg")
+						 //        .attr("width", w)
+						 //        .attr("height", h);
 
-						        var x = d3.scale.linear().domain([0, 23]).range([left_pad, w-pad]),
-    							y = d3.scale.linear().domain([0, 6]).range([pad, h-pad*2]);
+						 //        var x = d3.scale.linear().domain([0, 23]).range([left_pad, w-pad]),
+    			// 				y = d3.scale.linear().domain([0, 6]).range([pad, h-pad*2]);
 
-    							var xAxis = d3.svg.axis().scale(x).orient("bottom"),
-    							yAxis = d3.svg.axis().scale(y).orient("left");
+    			// 				var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+    			// 				yAxis = d3.svg.axis().scale(y).orient("left");
 
-    							svg.append("g")
-							    .attr("class", "axis")
-							    .attr("transform", "translate(0, "+(h-pad)+")")
-							    .call(xAxis);
+    			// 				svg.append("g")
+							//     .attr("class", "axis")
+							//     .attr("transform", "translate(0, "+(h-pad)+")")
+							//     .call(xAxis);
 							 
-							svg.append("g")
-							    .attr("class", "axis")
-							    .attr("transform", "translate("+(left_pad-pad)+", 0)")
-							    .call(yAxis);
+							// svg.append("g")
+							//     .attr("class", "axis")
+							//     .attr("transform", "translate("+(left_pad-pad)+", 0)")
+							//     .call(yAxis);
 
-							   	// var xAxis = d3.svg.axis().scale(x).orient("bottom")
-						     //    .ticks(24)
-						     //    .tickFormat(function (d, i) {
-						     //        var m = (d &gt, 12) ? "p" : "a";
-						     //        return (d%12 == 0) ? 12+m :  d%12+m;
-						     //    }),
-						    	// yAxis = d3.svg.axis().scale(y).orient("left")
-						     //    .ticks(7)
-						     //    .tickFormat(function (d, i) {
-						     //    	console.log(data_url['keyword'].asList())
-						     //        return data_url['keyword'].asList()[d];
-						     //    });
-							</script>
+							//    	// var xAxis = d3.svg.axis().scale(x).orient("bottom")
+						 //     //    .ticks(24)
+						 //     //    .tickFormat(function (d, i) {
+						 //     //        var m = (d &gt, 12) ? "p" : "a";
+						 //     //        return (d%12 == 0) ? 12+m :  d%12+m;
+						 //     //    }),
+						 //    	// yAxis = d3.svg.axis().scale(y).orient("left")
+						 //     //    .ticks(7)
+						 //     //    .tickFormat(function (d, i) {
+						 //     //    	console.log(data_url['keyword'].asList())
+						 //     //        return data_url['keyword'].asList()[d];
+						 //     //    });
+							// </script>
 						</div>
 					</div>
 				</div>
