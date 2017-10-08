@@ -34,7 +34,7 @@ def complete():
 				# google_analyze_entity_sentiment(tweet['text'], entities_map)
 				google_analyze_entity_sentiment(entity, entities_map)
 	print("Getting top entities...")
-	top_n = get_top_n(entities_map, 20)
+	top_n = get_top_n(entities_map, 5)
 	#writing to csv files
 	# with open('testDisplay.csv', 'w') as csv_file:
 	# 	writer = csv.writer(csv_file)
