@@ -151,7 +151,7 @@
 							        .attr("height", h);
 
 							        var x = d3.scale.linear().domain([1, 24]).range([left_pad, w-pad]),
-	    							y = d3.scale.linear().domain([0, 5]).range([pad, h-pad]);
+	    							y = d3.scale.linear().domain([0, 1]).range([pad, h-pad]);
 
 	    							var xAxis = d3.svg.axis().scale(x).orient("bottom"),
 	    							yAxis = d3.svg.axis().scale(y).orient("left");
