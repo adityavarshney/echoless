@@ -12,7 +12,10 @@
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
 		<script src="https://d3js.org/d3.v4.min.js"></script>
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<script src="https://code.jquery.com/jquery-3.2.1.js"
+		  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+		  crossorigin="anonymous"></script>
+  		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
 	</head>
 	<body>
@@ -38,26 +41,32 @@
 								<h2>Find Biases in Your Social Media Feeds</h2>
 							</header>
 							<p> Enter Twitter Handle </p>
-						  <input type="text" name="handle" id="handleID"><br>
-						  <input type="submit"  value="Run!">
-							  <script type = "text/javascript">
-							  	var handleID = document.getElementById('handleID');
-							  	console.log(handleID);
+						  <input name="handle" type="text" id="handleID"></input><br>
+						  <button name="handleButton">Run!</button>
+							  <script type="text/javascript">
+							  	function getHandle(input) {
+							  		var jqXHR = $.ajax({
+							  			type: "POST",
+							  			url: "/",
+							  			async: false,
+							  			data: { username : input }
+							  		})
+							  		return jqXHR.responseText;
+							  	}
+							  	$('#handleButton').click(function() {
+							  		var handleID = document.getElementById('handleID').value;
+							  		if (handleID.length != 0) {
+							  			if (!handleID.substring(0,1) === "@") {
+							  				handleID = "@" + handleID;
+							  			}
+							  		}
+							  		var result = getHandle(result);
+							  		console.log(result);
+							  	});
 							  </script>
 						</div>
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span class="image fit"><img src="images/pic01.jpg" alt="" /></span>
-							 //  	d3.csv("testDisplay.csv", function(data) {
-								//   data.forEach(function(d) {
-								//     d. = +d.;
-								//     d["land area"] = +d["land area"];
-								//   });
-								//   console.log(data[0]);
-								// });
-									// var svgContainer = d3.select("body").append("svg").attr("width", 400).attr("height", 100);
-									// var axisScale = d3.scale.linear().domain([-1, 1]).range([-1, 1]);
-									// var xAxis = d3.svg.axis().scale(axisScale);
-									// var xAxisGroup = svgContainer.append("g").call(xAxis);
 						</div>
 					</div>
 				</div>
