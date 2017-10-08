@@ -39,25 +39,25 @@
 							</header>
 							<p> Enter Twitter Handle </p>
 						  <input type="text" name="handle" id="handleID"><br>
-						  <input type="submit" value="Run!">
+						  <input type="submit"  value="Run!">
+							  <script type = "text/javascript">
+							  	var handleID = document.getElementById('handleID');
+							  	console.log(handleID);
+							  </script>
 						</div>
 						<div class="6u$ 12u$(medium) important(medium)">
 							<span class="image fit"><img src="images/pic01.jpg" alt="" /></span>
-							<script type = "text/javascript">
-							  	var handleID = document.getElementById('handleID');
-							  	console.log(handleID);
-							  	d3.csv("testDisplay.csv", function(data) {
-								  data.forEach(function(d) {
-								    d.population = +d.population;
-								    d["land area"] = +d["land area"];
-								  });
-								  console.log(data[0]);
-								});
+							 //  	d3.csv("testDisplay.csv", function(data) {
+								//   data.forEach(function(d) {
+								//     d. = +d.;
+								//     d["land area"] = +d["land area"];
+								//   });
+								//   console.log(data[0]);
+								// });
 									// var svgContainer = d3.select("body").append("svg").attr("width", 400).attr("height", 100);
 									// var axisScale = d3.scale.linear().domain([-1, 1]).range([-1, 1]);
 									// var xAxis = d3.svg.axis().scale(axisScale);
 									// var xAxisGroup = svgContainer.append("g").call(xAxis);
-						  </script>
 						</div>
 					</div>
 				</div>
