@@ -2,15 +2,12 @@
 from google.cloud import language
 from google.cloud.language import enums
 from google.cloud.language import types
+from entity import Entity
 
 # Instantiates a client
 client = language.LanguageServiceClient()
 
-# Maps from entity name to a list of entity_infos with that name
-# Each entity_info contains its type, count, sentiment score sum, sentiment magnitude sum, and salience sum
-entities_map = {}
-
-def google_analyze_entity_sentiment(tweet):
+def google_analyze_entity_sentiment(tweet, entities_map):
 	document = types.Document(
 	    content=tweet,
 	    type=enums.Document.Type.PLAIN_TEXT)
@@ -20,20 +17,22 @@ def google_analyze_entity_sentiment(tweet):
 	for entity in entities:
 		name = entity.name
 		entity_type = entity_type[entity.type]
-		entity_info = get_entity_info(name, entity_type)
-		entity_info['count'] += 1
-		entity_info['salience_sum'] += entity.salience
-		entity_info['score_sum'] += entity.sentiment.score
-		entity_info['magnitude_sum'] += entity.sentiment.magnitude
+		entity_info = get_entity_info(name, entity_type, entities_map)
+		entity_info.increment_count()
+		entity_info.increment_salience(entity.salience)
+		entity_info.increment_score(entity.score)
+		entity_info.increment_magnitude(entity.magnitude)
 
-def get_entity_info(name, entity_type):
+def get_entity_info(name, entity_type, entities_map):
 	if name not in entities_map:
 		entities_map[name] = []
 	entity_info = None
 	for e in entities_map[name]:
 		if e['type'] == entity_type:
 			return e
-	entity_info = {'type': entity_type, 'count': 0, 'salience_sum': 0, 'score_sum': 0, 'magnitude_sum': 0}
+	entity_info = Entity(name, entity_type)
 	entities_map[name].append(entity_info)
 	return entity_info
 
+def get_top_n(entities_map, n):
+	return
