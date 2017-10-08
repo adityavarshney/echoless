@@ -59,7 +59,7 @@ def complete():
 	# return render_template('index.html', message='')
 
 @app.route("/hello", methods=['POST'])
-def complete():
+def starting():
 	message = None
 	politicalScore = 0
 	count = 0
