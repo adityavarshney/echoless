@@ -1,4 +1,0 @@
-pymongo
-oauth2
-httplib2
-argparse

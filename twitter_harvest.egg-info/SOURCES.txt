@@ -1,6 +1,0 @@
-setup.py
-twitter_harvest.egg-info/PKG-INFO
-twitter_harvest.egg-info/SOURCES.txt
-twitter_harvest.egg-info/dependency_links.txt
-twitter_harvest.egg-info/requires.txt
-twitter_harvest.egg-info/top_level.txt
