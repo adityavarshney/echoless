@@ -25,15 +25,14 @@ def process_user_tweets():
 # user's friends' IDs to get their tweets
 def process_friends_tweets():
 	friends = api.GetFriendIDs(USER_ID)[:1]
-	all_friends_tweets = []
+	all_friends_tweets = [] 
 	for f in friends:
 		f_t = api.GetUserTimeline(f, count=TWEET_COUNT)
 		f_tweets = [i.AsDict() for i in f_t]
 		for tweet in f_tweets:
 			tweet_json = tweet_to_json(tweet)
-			all_friends_tweets.append(tweet_json)
-			# analyze_tweet(tweet['text'])
-	return all_friends_tweets
+		all_friends_tweets.append(f_tweets)
+	return f_tweets 
 
 def tweet_to_json(tweet):
 	tweet_info = {}
@@ -42,11 +41,11 @@ def tweet_to_json(tweet):
 	tweet_info['retweet_count'] = tweet['retweet_count']
 	if 'retweeted_status' in tweet:
 		tweet_info['retweet_user'] = tweet['retweeted_status']['user']['id']
-	tweet_info['user_id'] = tweet['user']['id']
+	tweet_info['user_id'] = tweet['user']['id'] 
 	tweet_info['text'] = tweet['text']
 	if 'media' in tweet:
 		tweet_info['media_url'] = tweet['media'][0]['media_url_https']
 		tweet_info['media_type'] = tweet['media'][0]['type']
 	return json.dumps(tweet_info)
 
-print(process_friends_tweets())
+#print(process_friends_tweets())
