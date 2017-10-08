@@ -49,11 +49,10 @@ def complete():
 	# 	print(e.score_sum/e.count)
 	# 	print(e.magnitude_sum/e.count)
 	# 	print()
-	result = ""
+	result = {}
 	for e in top_n:
-		result += e.name + ": "
-		result += str(e.avg_score()) + ", "
-	resp = make_response('{"response": '+result+'}')
+		result[e.name] = e.avg_score()
+	resp = make_response(json.dumps(result))
 	resp.headers['Content-Type'] = "application/json"
 	return resp
 	# return render_template('index.html', message='')
