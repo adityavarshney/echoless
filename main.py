@@ -1,6 +1,5 @@
 from tweets import process_friends_tweets, process_user_tweets
 from analyze import google_analyze_entity_sentiment, get_top_n
-<<<<<<< HEAD
 from flask import Flask, render_template, redirect, url_for, request, make_response
 
 app = Flask(__name__)
