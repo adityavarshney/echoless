@@ -2,7 +2,7 @@
 import csv
 import pandas as pd
 import twitter
-from tweets import process_user_tweets, api
+from tweets import process_user_tweets, api, tweet_to_json
 
 df1 = pd.read_csv("senatorTwitterHandles.csv")
 
@@ -22,8 +22,7 @@ tweetScore = {}
 def createIndexScores():
 	for senatorHandle in senatorTweets:
 		for tweet in senatorTweets[senatorHandle]:
-			score = senatorIndex[senatorHandle]
-			tweetScore[tweet['text']] = score
+			tweetScore[tweet['text']] = senatorIndex[senatorHandle] 
 
 createIndexScores()
 
@@ -32,6 +31,5 @@ with open('allSenatorTweetsAndScores.csv', 'w') as csv_file:
 	writer = csv.writer(csv_file)
 	for key, value in tweetScore.items():
 		writer.writerow([key, value])
-
 
 
