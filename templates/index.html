@@ -170,7 +170,7 @@
 						  <input name="handle" type="text" id="handleID"></input><br>
 						  <button id="handleButton">Run!</button>
 							  <script type="text/javascript">
-							  	function getHandle(input) {
+							  	function secondGraph(input) {
 							  		var jqXHR = $.ajax({
 							  			type: "POST",
 							  			url: "/hello",
@@ -186,29 +186,21 @@
 							  				handleID = handleID.substring(1);
 							  			}
 							  		}
-							  		var result = getHandle(handleID);
+							  		var result = secondGraph(handleID);
 							  		result = JSON.parse(result);
-							  		$("#img1").hide();
-							  		var keywords_pairs = [];
-							  		var keywords = Object.keys(result);
-							  		for (var i = 0; i < 5; i++) {
-							  			keywords_pairs.push([keywords[i], result[keywords[i]]]);
-							  		}
-							  		console.log(keywords);
-							  		console.log(keywords_pairs);
+							  		$("#img2").hide();
 							  		console.log(result);
 								  	var w = 480,
 								    h = 300,
 								    pad = 20,
 								    left_pad = 100,
-								    data_url = 'static/testDisplay.csv';
 
 								    var svg = d3.select("#viz")
 							        .append("svg")
 							        .attr("width", w)
 							        .attr("height", h);
 
-							        var x = d3.scale.linear().domain([-1, 1]).range([left_pad, w-pad]),
+							        var x = d3.scale.linear().domain([1, 24]).range([left_pad, w-pad]),
 	    							y = d3.scale.linear().domain([0, 5]).range([pad, h-pad]);
 
 	    							var xAxis = d3.svg.axis().scale(x).orient("bottom"),
@@ -268,6 +260,7 @@
 								    fill: #222;
 								}
 							</style>
+							<span id='img2' class="image fit"><img src="static/images/pic01.jpg" alt="" /></span>
 							<div id="viz"></div>
 							
 						</div>
