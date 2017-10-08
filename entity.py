@@ -20,7 +20,10 @@ class Entity():
 		self.magnitude_sum += magnitude
 
 	def __lt__(self, other):
-		return self.salience_sum > other.salience_sum
+		return abs(self.avg_score()) > abs(other.avg_score())
 
 	def __eq__(self, other):
-		return self.salience_sum == other.salience_sum
+		return abs(self.avg_score()) == abs(other.avg_score())
+
+	def avg_score(self):
+		return self.score_sum / self.count

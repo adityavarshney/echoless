@@ -40,7 +40,8 @@ def get_top_n(entities_map, n):
 	q = PriorityQueue()
 	for name in entities_map:
 		for e in entities_map[name]:
-			q.put(e)
+			if '@' not in e.name and 'http' not in e.name and e.score_sum != 0:
+				q.put(e)
 	ret = []
 	for i in range(n):
 		ret.append(q.get())
