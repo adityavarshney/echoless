@@ -1,6 +1,5 @@
 import json
 import twitter
-from analyze import analyze_tweet
 
 api = twitter.Api(consumer_key='EmONxqVj70y1d6wF3SdxwXzf4',
   consumer_secret='8XismvLv6ZFlzTtQmCT8Pdzu9iQw9SshKQ0Z9mu2Fg8y4oX8rU',
@@ -35,7 +34,8 @@ def tweet_to_json(tweet):
 	tweet_info = {}
 	tweet_info['hashtags'] = tweet['hashtags']
 	tweet_info['id'] = tweet['id']
-	tweet_info['retweet_count'] = tweet['retweet_count']
+	if 'retweet_count' in tweet:
+		tweet_info['retweet_count'] = tweet['retweet_count']
 	if 'retweeted_status' in tweet:
 		tweet_info['retweet_user'] = tweet['retweeted_status']['user']['id']
 	tweet_info['user_id'] = tweet['user']['id'] 
@@ -44,5 +44,3 @@ def tweet_to_json(tweet):
 		tweet_info['media_url'] = tweet['media'][0]['media_url_https']
 		tweet_info['media_type'] = tweet['media'][0]['type']
 	return json.dumps(tweet_info)
-
-#print(process_friends_tweets())
