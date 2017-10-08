@@ -108,7 +108,7 @@
 
 								 	var i, x, y = pad;
 								    for (i = 0; i < 5; i++) {
-								    	x = (keywords_pairs[i][1] + 1) * w/2 + left_pad;
+								    	x = (keywords_pairs[i][1] + 1) * (w-left_pad)/2 + left_pad;
 								    	console.log(x);
 								    	svg.append('circle')
 									    .attr('cx', x)
