@@ -42,12 +42,12 @@
 							</header>
 							<p> Enter Twitter Handle </p>
 						  <input name="handle" type="text" id="handleID"></input><br>
-						  <button name="handleButton">Run!</button>
+						  <button id="handleButton">Run!</button>
 							  <script type="text/javascript">
 							  	function getHandle(input) {
 							  		var jqXHR = $.ajax({
 							  			type: "POST",
-							  			url: "/",
+							  			url: "http://localhost:8000/no",
 							  			async: false,
 							  			data: { username : input }
 							  		})

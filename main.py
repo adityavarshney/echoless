@@ -7,7 +7,7 @@ from flask import Flask, render_template, redirect, url_for, request, make_respo
 
 app = Flask(__name__)
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/http://localhost:8000/no", methods=['GET', 'POST'])
 def complete(username):
 	message = None
 	if request.method == 'POST':
