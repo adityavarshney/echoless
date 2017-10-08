@@ -24,7 +24,7 @@ def createIndexScores():
 		for tweet in senatorTweets[senatorHandle]:
 			tweetScore[tweet['text']] = senatorIndex[senatorHandle] 
 
-#createIndexScores()
+createIndexScores()
 
 #writing to csv files
 with open('allSenatorTweetsAndScores.csv', 'w') as csv_file:
@@ -40,5 +40,3 @@ def getAllTweetText():
 		for i in senatorTweets[senatorHandle]:
 			allTweetText.append(i['text']) 
 	return allTweetText
-
-print(getAllTweetText())
