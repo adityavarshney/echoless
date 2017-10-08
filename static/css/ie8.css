@@ -93,7 +93,7 @@
 		background-color: #333;
 		color: #ffffff;
 		-ms-behavior: url("assets/js/ie/backgroundsize.min.htc");
-		background-image: url("../../images/header.jpg");
+		background-image: url("../../static/images/header.jpg");
 		background-size: cover;
 		position: relative;
 	}

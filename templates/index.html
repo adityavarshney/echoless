@@ -10,7 +10,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="static/css/main.css" />
 		<script src="https://d3js.org/d3.v4.min.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.js"
 		  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
@@ -47,26 +47,26 @@
 							  	function getHandle(input) {
 							  		var jqXHR = $.ajax({
 							  			type: "POST",
-							  			url: "http://localhost:8000/no",
+							  			url: "/yes",
 							  			async: false,
-							  			data: { username : input }
-							  		})
+							  			data: { 'username' : input },
+							  		});
 							  		return jqXHR.responseText;
 							  	}
 							  	$('#handleButton').click(function() {
 							  		var handleID = document.getElementById('handleID').value;
 							  		if (handleID.length != 0) {
-							  			if (!handleID.substring(0,1) === "@") {
-							  				handleID = "@" + handleID;
+							  			if (handleID.substring(0,1) === "@") {
+							  				handleID = handleID.substring(1);
 							  			}
 							  		}
-							  		var result = getHandle(result);
+							  		var result = getHandle(handleID);
 							  		console.log(result);
 							  	});
 							  </script>
 						</div>
 						<div class="6u$ 12u$(medium) important(medium)">
-							<span class="image fit"><img src="images/pic01.jpg" alt="" /></span>
+							<span class="image fit"><img src="static/images/pic01.jpg" alt="" /></span>
 						</div>
 					</div>
 				</div>
@@ -108,7 +108,7 @@
 					<p>Ante nunc accumsan et aclacus nascetur ac ante amet sapien sed.</p>
 					<div class="row 150%">
 						<div class="4u 12u$(medium)">
-							<span class="image fit"><img src="images/pic02.jpg" alt="" /></span>
+							<span class="image fit"><img src="static/images/pic02.jpg" alt="" /></span>
 							<h3>Magna feugiat lorem</h3>
 							<p>Adipiscing a commodo ante nunc magna lorem et interdum mi ante nunc lobortis non amet vis sed volutpat et nascetur.</p>
 							<ul class="actions">
@@ -116,7 +116,7 @@
 							</ul>
 						</div>
 						<div class="4u 12u$(medium)">
-							<span class="image fit"><img src="images/pic03.jpg" alt="" /></span>
+							<span class="image fit"><img src="static/images/pic03.jpg" alt="" /></span>
 							<h3>Magna feugiat lorem</h3>
 							<p>Adipiscing a commodo ante nunc magna lorem et interdum mi ante nunc lobortis non amet vis sed volutpat et nascetur.</p>
 							<ul class="actions">
@@ -124,7 +124,7 @@
 							</ul>
 						</div>
 						<div class="4u$ 12u$(medium)">
-							<span class="image fit"><img src="images/pic04.jpg" alt="" /></span>
+							<span class="image fit"><img src="static/images/pic04.jpg" alt="" /></span>
 							<h3>Magna feugiat lorem</h3>
 							<p>Adipiscing a commodo ante nunc magna lorem et interdum mi ante nunc lobortis non amet vis sed volutpat et nascetur.</p>
 							<ul class="actions">
@@ -484,12 +484,12 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 			</section>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
+			<script src="static/js/jquery.min.js"></script>
+			<script src="static/js/jquery.scrolly.min.js"></script>
+			<script src="static/js/skel.min.js"></script>
+			<script src="static/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
+			<script src="static/js/main.js"></script>
 
 	</body>
 </html>
