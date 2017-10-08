@@ -43,7 +43,6 @@ def tweet_to_json(tweet):
 		tweet_info['media_type'] = tweet['media'][0]['type']
 	return json.dumps(tweet_info)
 
-
 # user's own tweets
 def process_user_tweets_training(username, count = 10):
 	user = api.GetUser(screen_name=username)

@@ -4,26 +4,29 @@ from google.cloud.language import enums
 from google.cloud.language import types
 
 from entity import Entity
+# from db import keyword_in_db
 from queue import PriorityQueue
 
 # Instantiates a client
 client = language.LanguageServiceClient()
 
-def google_analyze_entity_sentiment(tweet, entities_map):
+def google_get_entity_sentiments(tweet):
 	document = types.Document(
 	    content=tweet,
 	    type=enums.Document.Type.PLAIN_TEXT)
 	entities = client.analyze_entity_sentiment(document).entities
+	return entities
+
+def google_analyze_entity_sentiment(entity, entities_map):
 	entity_types = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION',
                    'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
-	for entity in entities:
-		name = entity.name
-		entity_type = entity_types[entity.type]
-		entity_info = get_entity_info(name, entity_type, entities_map)
-		entity_info.increment_count()
-		entity_info.increment_salience(entity.salience)
-		entity_info.increment_score(entity.sentiment.score)
-		entity_info.increment_magnitude(entity.sentiment.magnitude)
+	name = entity.name
+	entity_type = entity_types[entity.type]
+	entity_info = get_entity_info(name, entity_type, entities_map)
+	entity_info.increment_count()
+	entity_info.increment_salience(entity.salience)
+	entity_info.increment_score(entity.sentiment.score)
+	entity_info.increment_magnitude(entity.sentiment.magnitude)
 
 def get_entity_info(name, entity_type, entities_map):
 	if name not in entities_map:
@@ -44,24 +47,9 @@ def get_top_n(entities_map, n):
 				q.put(e)
 	ret = []
 	for i in range(n):
+		if q.empty():
+			break
 		ret.append(q.get())
 	return ret
 
-def populate_database(tweet, entities_list, entity_names):
-	document = types.Document(
-	    content=tweet,
-	    type=enums.Document.Type.PLAIN_TEXT)
-	entities = client.analyze_entity_sentiment(document).entities
-	entity_types = ('UNKNOWN', 'PERSON', 'LOCATION', 'ORGANIZATION',
-                   'EVENT', 'WORK_OF_ART', 'CONSUMER_GOOD', 'OTHER')
-	for entity in entities:
-		if '@' not in entity.name and 'http' not in entity.name and '&' not in entity.name:
-			try:
-				i = entity_names.index(entity.name.lower())
-				entities_list[i]['count'] += 1
-				entities_list[i]['max_sentiment'] = max(abs(entity.sentiment.score), entities_list[i]['max_sentiment'])
-				entities_list[i]['max_salience'] = max(entity.salience, entities_list[i]['max_salience'])
-			except ValueError:
-				new_entity = {'name': entity.name, 'count': 1, 'max_sentiment': abs(entity.sentiment.score), 'max_salience': entity.salience}
-				entities_list.append(new_entity)
-				entity_names.append(entity.name.lower())
+
