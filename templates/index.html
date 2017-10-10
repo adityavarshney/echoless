@@ -82,6 +82,34 @@
 						  				handleID = handleID.substring(1);
 						  			}
 
+									// Add a twitter feed next to the response box
+
+								 	var strurl = "https://twitter.com/" + handleID;
+								 	console.log(strurl)
+								 	var currentDiv = document.getElementById("currentDiv");
+								 	$("#siblingDiv").empty();
+								 	var siblingDiv = document.getElementById("siblingDiv");
+								 	siblingDiv.setAttribute("style", "float: right;");
+
+								 	var a = document.createElement("a");
+								 	a.setAttribute("id", "tweets");
+								 	a.setAttribute("class", "twitter-timeline");
+								 	a.setAttribute("data-width", "500px");
+								 	a.setAttribute("data-height", "400px");
+									a.setAttribute("data-theme", "light");
+									a.href = strurl;
+									a.innerHTML = "Link";
+									siblingDiv.appendChild(a);
+
+									var s = document.createElement('script');
+							 		var parentDiv = document.getElementById("parentDiv");
+									s.type = 'text/javascript';
+									s.async = true;
+									s.src = "//platform.twitter.com/widgets.js";
+									s.charset = "utf-8";
+									siblingDiv.appendChild(s);
+									twttr.widgets.load();		
+
 						  			// retrieve keywords
 							  		var result = getKeyWords(handleID);
 							  		result = JSON.parse(result);
@@ -222,34 +250,7 @@
 								 	svg.append('circle')
 								 	.attr('cx', w)
 								 	.attr('cy', (h-pad)-50)
-								 	.attr('r', 10)
-
-								 	// Add a twitter feed next to the response box
-
-								 	var strurl = "https://twitter.com/" + handleID;
-								 	console.log(strurl)
-								 	var currentDiv = document.getElementById("currentDiv");
-								 	var siblingDiv = document.getElementById("siblingDiv");
-								 	siblingDiv.setAttribute("style", "float: right;");
-
-								 	var a = document.createElement("a");
-								 	a.setAttribute("id", "tweets");
-								 	a.setAttribute("class", "twitter-timeline");
-								 	a.setAttribute("data-width", "500px");
-								 	a.setAttribute("data-height", "500px");
-									a.setAttribute("data-theme", "light");
-									a.href = strurl;
-									a.innerHTML = "Link";
-									siblingDiv.appendChild(a);
-
-									var s = document.createElement('script');
-							 		var parentDiv = document.getElementById("parentDiv");
-									s.type = 'text/javascript';
-									s.async = true;
-									s.src = "//platform.twitter.com/widgets.js";
-									s.charset = "utf-8";
-									siblingDiv.appendChild(s);
-									twttr.widgets.load();		 	
+								 	.attr('r', 10) 	
 								});								
 							  </script>
 							  <!-- Adding sample twitter feed -->							
@@ -277,9 +278,6 @@
 								}
 							</style>
 						</div>
-<!-- 						<div class="6u$ 12u$(medium) important(medium)">
-							<span id='loadingimg' class="image fit"><img src="static/images/loading.gif" alt="" style="display:none"/></span>
-						</div> -->
 						<div id = "parent" style="width:100%; margin-top:30px" >
 							<div id="viz" style="float: left;"></div>
 							<div id="viz2" style="float: right;"></div>
@@ -313,6 +311,5 @@
 			<script src="static/js/util.js"></script>
 			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="static/js/main.js"></script>
-
 	</body>
 </html>
