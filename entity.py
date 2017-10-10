@@ -1,3 +1,6 @@
+# Contains information regarding the Entity Class
+# Entities refer to entities in language processed by the Google ML NLP platform.
+
 class Entity():
 	def __init__(self, name, entity_type):
 		self.name = name
@@ -19,11 +22,12 @@ class Entity():
 	def increment_magnitude(self, magnitude):
 		self.magnitude_sum += magnitude
 
+	def avg_score(self):
+		return self.score_sum / self.count
+
+	# Compare entities by calculating their average scores
 	def __lt__(self, other):
 		return abs(self.avg_score()) > abs(other.avg_score())
 
 	def __eq__(self, other):
 		return abs(self.avg_score()) == abs(other.avg_score())
-
-	def avg_score(self):
-		return self.score_sum / self.count

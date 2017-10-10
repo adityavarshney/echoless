@@ -17,17 +17,17 @@ def test():
 	username = request.form['username']
 	return username
 
-@app.route("/yes", methods=['POST'])
-def complete():
-	message = None
+@app.route("/keywords", methods=['POST'])
+def sendKeywords():
 	username = request.form['username']
-	print("Getting friends' tweets...")
+	# print("Getting friends' tweets...")
 	print(username)
 	# tweets = process_friends_tweets(username, 10, 10)
 	tweets = process_user_tweets(username, 200)
 	# Maps from entity name to a list of Entities with that name
 	entities_map = {}
 	print("Analyzing tweets...")
+	print(len(tweets))
 	for tweet in tweets:
 		entities = google_get_entity_sentiments(tweet['text'])
 		for entity in entities:
@@ -36,48 +36,29 @@ def complete():
 				google_analyze_entity_sentiment(entity, entities_map)
 	print("Getting top entities...")
 	top_n = get_top_n(entities_map, 5)
-	#writing to csv files
-	# with open('testDisplay.csv', 'w') as csv_file:
-	# 	writer = csv.writer(csv_file)
-	# 	writer.writerow(['keyword', 'sentiment'])
-	# 	for e in top_n:
-	# 		writer.writerow([e.name, e.score_sum/e.count])
-	# for e in top_n:
-	# 	print(e.name)
-	# 	print(e.salience_sum)
-	# 	print(e.count)
-	# 	print(e.type)
-	# 	print(e.score_sum/e.count)
-	# 	print(e.magnitude_sum/e.count)
-	# 	print()
 	result = {}
 	for e in top_n:
 		result[e.name] = e.avg_score()
 	resp = make_response(json.dumps(result))
 	resp.headers['Content-Type'] = "application/json"
 	return resp
-	# return render_template('index.html', message='')
 
-@app.route("/hello", methods=['POST'])
-def starting():
-	message = None
+@app.route("/spectrum", methods=['POST'])
+def sendSpectrum():
 	politicalScore = 0
 	count = 0
 	username = request.form['username']
-	print("Getting friends' tweets...")
-	print(username)
+	# print("Getting friends' tweets...")
+	# print(username)
 	# tweets = process_friends_tweets(username, 10, 10)
 	tweets = process_user_tweets(username, 200)
-	# Maps from entity name to a list of Entities with that name
-	entities_map = {}
-	print("Analyzing tweets...")
+	# print("Analyzing tweets...")
 	for tweet in tweets:
 		politicalScore += int(getMLClassifier(tweet['text']))
 		count +=1
 	resp = make_response(json.dumps(politicalScore/count))
 	resp.headers['Content-Type'] = "application/json"
 	return resp
-	# return render_template('index.html', message='')
 
 if __name__ == "__main__":
 	app.run(debug = True)

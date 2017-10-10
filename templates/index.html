@@ -7,13 +7,14 @@
 <html>
 	<head>
 		<title>Echoless</title>
+		<link rel="shortcut icon" href="../static/images/E.ico" type="image/x-icon">
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="static/css/main.css" />
 		<script src="https://d3js.org/d3.v4.min.js"></script>
 		<script src="https://d3plus.org/js/d3.js"></script><!-- https: added -->
-		<script src="https://d3plus.org/js/d3plus.js"></script><!-- https: added -->
+		<script src="https://d3plus.org/js/d3plus.js"></script>
 		<script src="https://code.jquery.com/jquery-3.2.1.js"
 		  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
 		  crossorigin="anonymous"></script>
@@ -36,47 +37,61 @@
 
 		<!-- One -->
 			<section id="one" class="main style1">
-				<div class="container">
-					<div class="row 150%">
-						<div class="6u 12u$(medium)">
+				<div class="container" id="currentContainer">
+					<div id="parentDiv" class="row 150%">
+						<div id="siblingDiv" style="float:right;"></div>
+						<div class="6u 12u$(medium)" id="currentDiv" style="float:left; width=700px;">
 							<header class="major">
 								<h2>Find Biases in Your Social Media Feeds</h2>
 							</header>
 							<p> Enter Twitter Handle </p>
 						  <input name="handle" type="text" id="handleID"></input><br>
-						  <button id="handleButton">Run!</button>
+						  <a href="#parent" id="handleButton" class = "button scrolly">Run!</a>
 							  <script type="text/javascript">
-							  	function getHandle(input) {
+							  	function getKeyWords(input) {
 							  		var jqXHR = $.ajax({
 							  			type: "POST",
-							  			url: "/yes",
+							  			url: "/keywords",
 							  			async: false,
 							  			data: { 'username' : input },
 							  		});
 							  		return jqXHR.responseText;
 							  	}
-							  	function secondGraph(param) {
+							  	function getSpectrum(param) {
 							  		var ajax2 = $.ajax({
 							  			type: "POST",
-							  			url: "/hello",
+							  			url: "/spectrum",
 							  			async: false,
 							  			data: { 'username' : param },
 							  		});
 							  		return ajax2.responseText;
 							  	}
+							  	$("#loadingimg").hide();
 							  	$('#handleButton').click(function() {
-							  		$("#img1").hide();
-							  		$("#img2").show();
+							  		// show loading img
+							  		// $("#loadingimg").show();
+							  		
+							  		// get inputted handle
 							  		var handleID = document.getElementById('handleID').value;
-							  		if (handleID.length != 0) {
-							  			if (handleID.substring(0,1) === "@") {
-							  				handleID = handleID.substring(1);
-							  			}
+							  		if (handleID.length === 0) {
+							  			// $("#loadingimg").hide();
+							  			alert("Invalid Handle");
+							  			return;
 							  		}
-							  		var result = getHandle(handleID);
+							  		if (handleID.substring(0,1) === "@") {
+						  				handleID = handleID.substring(1);
+						  			}
+
+						  			// retrieve keywords
+							  		var result = getKeyWords(handleID);
 							  		result = JSON.parse(result);
-							  		$("#img2").hide();
+
+							  		// hide/clear relevant fields
+							  		// $("#loadingimg").hide();
 							  		$("#viz").empty();
+
+							  		// Access keywords/sentiments returned by getKeywords
+
 							  		var keywords_pairs = [];
 							  		var keywords = Object.keys(result);
 							  		for (var i = 0; i < 5; i++) {
@@ -85,16 +100,17 @@
 							  		console.log(keywords);
 							  		console.log(keywords_pairs);
 							  		console.log(result);
+
+							  		// Construct the Keywords vs. Sentiment Scores graph
 								  	var w = 480,
 								    h = 300,
 								    pad = 20,
-								    left_pad = 100,
-								    data_url = 'static/testDisplay.csv';
+								    left_pad = 100;
 
 								    var svg = d3.select("#viz")
-							        .append("svg")
-							        .attr("width", w)
-							        .attr("height", h);
+								        .append("svg")
+								        .attr("width", w)
+								        .attr("height", h);
 
 							        var x = d3.scale.linear().domain([-1, 1]).range([left_pad, w-pad]),
 	    							y = d3.scale.linear().domain([0, 5]).range([pad, h-pad]);
@@ -104,19 +120,39 @@
 
 								   	
 							    	yAxis = d3.svg.axis().scale(y).orient("left")
-							        .ticks(5)
-							        .tickFormat(function (d, i) {
-							            return keywords[d];
-							        });
+								        .ticks(5)
+								        .tickFormat(function (d, i) {
+								            return keywords[d];
+								        });
+
 	    							svg.append("g")
-								    .attr("class", "axis")
-								    .attr("transform", "translate(0, "+(h-pad)+")")
-								    .call(xAxis);
+									    .attr("class", "axis")
+									    .attr("transform", "translate(0, "+(h-pad)+")")
+									    .call(xAxis);
 								 
 									svg.append("g")
-								    .attr("class", "axis")
-								    .attr("transform", "translate("+(left_pad-pad)+", 0)")
-								    .call(yAxis);
+									    .attr("class", "axis")
+									    .attr("transform", "translate("+(left_pad-pad)+", 0)")
+									    .call(yAxis);
+
+									// // add y-axis label
+								 //    svg.append("text")
+								 //    	.attr("text-anchor", "middle")
+         //    							.attr("transform", "translate("+ (pad/2) +","+(h)+")rotate(-90)")  
+         //    							.text("Keywords");
+
+         //    						// add x-axis label
+         //    						svg.append("text")
+							  //           .attr("text-anchor", "middle")
+							  //           .attr("transform", "translate("+ (w/2) +","+(h)+")")
+							  //           .text("Tweet Sentiment");
+
+							        //   svg.append("text")
+									      // .attr("class", "title")
+									      // .attr("x", w/2)
+									      // .attr("y", 0 - (margin.top / 2))
+									      // .attr("text-anchor", "middle")
+									      // .text("Testing");
 
 								 	var i, x, y = pad;
 								    for (i = 0; i < 5; i++) {
@@ -130,18 +166,25 @@
 									    y += 50;
 								    }
 
-							  		var number = secondGraph(handleID);
+								    // simultaneously handle the political spectrum graph
+
+							  		var number = getSpectrum(handleID);
 							  		number = JSON.parse(number);
-							  		$("#img3").hide();
+
+							  		// $("#loadingimg").hide();
+							  		$("#viz2").empty();
+
 								  	var w = 480,
 								    h = 300,
 								    pad = 20,
 								    left_pad = 100;
 
+								    console.log(number);
+
 								    var svg = d3.select("#viz2")
-							        .append("svg")
-							        .attr("width", w)
-							        .attr("height", h);
+								        .append("svg")
+								        .attr("width", w)
+								        .attr("height", h);
 
 							        var x = d3.scale.linear().domain([1, 24]).range([left_pad, w-pad]),
 	    							y = d3.scale.linear().domain([0, 1]).range([pad, h-pad]);
@@ -149,85 +192,97 @@
 	    							var xAxis = d3.svg.axis().scale(x).orient("bottom"),
 	    							yAxis = d3.svg.axis().scale(y).orient("left");
 
-								   	console.log(number);
 
-							    	yAxis = d3.svg.axis().scale(y).orient("left")
-							        .ticks(1);
-	    							svg.append("g")
-								    .attr("class", "axis")
-								    .attr("transform", "translate(0, "+(h-pad)+")")
-								    .call(xAxis);
+							    	// yAxis = d3.svg.axis().scale(y).orient("left")
+								    //     .ticks(0);
+
+		    						svg.append("g")
+									    .attr("class", "axis")
+									    .attr("transform", "translate(0, "+(h-pad)+")")
+									    .call(xAxis);
 								 
-									svg.append("g")
-								    .attr("class", "axis")
-								    .attr("transform", "translate("+(left_pad-pad)+", 0)")
-								    .call(yAxis);
+									// svg.append("g")
+									//     .attr("class", "axis")
+									//     .attr("transform", "translate("+(left_pad-pad)+", 0)")
+									//     .call(yAxis);
+
+								    // // add y-axis label
+								    // svg.append("text")
+								    // 	.attr("text-anchor", "middle")
+            // 							.attr("transform", "translate("+ (pad/2) +","+(h/2)+")rotate(-90)")  
+            // 							.text("Keywords");
+
+            // 						// add x-axis label
+            // 						svg.append("text")
+							     //        .attr("text-anchor", "middle")
+							     //        .attr("transform", "translate("+ (w/2) +","+(h-(pad/3))+")")
+							     //        .text("Tweet Sentiment");
 
 								 	w = number*16 + 75
 								 	svg.append('circle')
 								 	.attr('cx', w)
 								 	.attr('cy', (h-pad)-50)
 								 	.attr('r', 10)
-								  	});
+
+								 	// Add a twitter feed next to the response box
+
+								 	var strurl = "https://twitter.com/" + handleID;
+								 	console.log(strurl)
+								 	var currentDiv = document.getElementById("currentDiv");
+								 	var siblingDiv = document.getElementById("siblingDiv");
+								 	siblingDiv.setAttribute("style", "float: right;");
+
+								 	var a = document.createElement("a");
+								 	a.setAttribute("id", "tweets");
+								 	a.setAttribute("class", "twitter-timeline");
+								 	a.setAttribute("data-width", "500px");
+								 	a.setAttribute("data-height", "500px");
+									a.setAttribute("data-theme", "light");
+									a.href = strurl;
+									a.innerHTML = "Link";
+									siblingDiv.appendChild(a);
+
+									var s = document.createElement('script');
+							 		var parentDiv = document.getElementById("parentDiv");
+									s.type = 'text/javascript';
+									s.async = true;
+									s.src = "//platform.twitter.com/widgets.js";
+									s.charset = "utf-8";
+									siblingDiv.appendChild(s);
+									twttr.widgets.load();		 	
+								});								
 							  </script>
+							  <!-- Adding sample twitter feed -->							
+							  <!-- <a class="twitter-timeline" data-width="500" data-height="300" href="https://twitter.com/SenSanders?ref_src=twsrc%5Etfw">Tweets by SenSanders</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>  -->
+							  <style>
+								.axis path,
+								.axis line {
+								    fill: none;
+								    stroke: #eee;
+								    shape-rendering: crispEdges;
+								}
+								 
+								.axis text {
+								    font-family: sans-serif;
+								    font-size: 11px;
+								}
+								 
+								.loading {
+								    font-family: sans-serif;
+								    font-size: 15px;
+								}
+								 
+								.circle {
+								    fill: #222;
+								}
+							</style>
 						</div>
-						<div class="6u$ 12u$(medium) important(medium)">
-							<span id='img1' class="image fit"><img src="static/images/pic01.jpg" alt="" /></span>
-							<style>
-								.axis path,
-								.axis line {
-								    fill: none;
-								    stroke: #eee;
-								    shape-rendering: crispEdges;
-								}
-								 
-								.axis text {
-								    font-family: sans-serif;
-								    font-size: 11px;
-								}
-								 
-								.loading {
-								    font-family: sans-serif;
-								    font-size: 15px;
-								}
-								 
-								.circle {
-								    fill: #222;
-								}
-
-								#img2 {
-									display: none;
-								}
-							</style>
-							<span id='img3' class="image fit"><img src="static/images/loading.gif" alt="" /></span>
-							<style>
-								.axis path,
-								.axis line {
-								    fill: none;
-								    stroke: #eee;
-								    shape-rendering: crispEdges;
-								}
-								 
-								.axis text {
-								    font-family: sans-serif;
-								    font-size: 11px;
-								}
-								 
-								.loading {
-								    font-family: sans-serif;
-								    font-size: 15px;
-								}
-								 
-								.circle {
-								    fill: #222;
-								}
-
-								#img2 {
-									display: none;
-								}
-							</style>
-							<div id="viz"></div>
-							<div id="viz2"></div>
+<!-- 						<div class="6u$ 12u$(medium) important(medium)">
+							<span id='loadingimg' class="image fit"><img src="static/images/loading.gif" alt="" style="display:none"/></span>
+						</div> -->
+						<div id = "parent" style="width:100%; margin-top:30px" >
+							<div id="viz" style="float: left;"></div>
+							<div id="viz2" style="float: right;"></div>
 						</div>
 					</div>
 				</div>
@@ -247,7 +302,7 @@
 					<li><a href="#" class="icon alt fa-envelope"><span class="label">Email</span></a></li>
 				</ul>
 				<ul class="copyright">
-					<li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+					<li>&copy; Echoless</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
 				</ul>
 			</section>
 
