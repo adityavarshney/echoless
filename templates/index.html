@@ -47,212 +47,6 @@
 							<p> Enter Twitter Handle </p>
 						  <input name="handle" type="text" id="handleID"></input><br>
 						  <a href="#parent" id="handleButton" class = "button scrolly">Run!</a>
-							  <script type="text/javascript">
-							  	function getKeyWords(input) {
-							  		var jqXHR = $.ajax({
-							  			type: "POST",
-							  			url: "/keywords",
-							  			async: false,
-							  			data: { 'username' : input },
-							  		});
-							  		return jqXHR.responseText;
-							  	}
-							  	function getSpectrum(param) {
-							  		var ajax2 = $.ajax({
-							  			type: "POST",
-							  			url: "/spectrum",
-							  			async: false,
-							  			data: { 'username' : param },
-							  		});
-							  		return ajax2.responseText;
-							  	}
-							  	$("#loadingimg").hide();
-							  	$('#handleButton').click(function() {
-							  		// show loading img
-							  		// $("#loadingimg").show();
-							  		
-							  		// get inputted handle
-							  		var handleID = document.getElementById('handleID').value;
-							  		if (handleID.length === 0) {
-							  			// $("#loadingimg").hide();
-							  			alert("Invalid Handle");
-							  			return;
-							  		}
-							  		if (handleID.substring(0,1) === "@") {
-						  				handleID = handleID.substring(1);
-						  			}
-
-									// Add a twitter feed next to the response box
-
-								 	var strurl = "https://twitter.com/" + handleID;
-								 	console.log(strurl)
-								 	var currentDiv = document.getElementById("currentDiv");
-								 	$("#siblingDiv").empty();
-								 	var siblingDiv = document.getElementById("siblingDiv");
-								 	siblingDiv.setAttribute("style", "float: right;");
-
-								 	var a = document.createElement("a");
-								 	a.setAttribute("id", "tweets");
-								 	a.setAttribute("class", "twitter-timeline");
-								 	a.setAttribute("data-width", "500px");
-								 	a.setAttribute("data-height", "400px");
-									a.setAttribute("data-theme", "light");
-									a.href = strurl;
-									a.innerHTML = "Link";
-									siblingDiv.appendChild(a);
-
-									var s = document.createElement('script');
-							 		var parentDiv = document.getElementById("parentDiv");
-									s.type = 'text/javascript';
-									s.async = true;
-									s.src = "//platform.twitter.com/widgets.js";
-									s.charset = "utf-8";
-									siblingDiv.appendChild(s);
-									twttr.widgets.load();		
-
-						  			// retrieve keywords
-							  		var result = getKeyWords(handleID);
-							  		result = JSON.parse(result);
-
-							  		// hide/clear relevant fields
-							  		// $("#loadingimg").hide();
-							  		$("#viz").empty();
-
-							  		// Access keywords/sentiments returned by getKeywords
-
-							  		var keywords_pairs = [];
-							  		var keywords = Object.keys(result);
-							  		for (var i = 0; i < 5; i++) {
-							  			keywords_pairs.push([keywords[i], result[keywords[i]]]);
-							  		}
-							  		console.log(keywords);
-							  		console.log(keywords_pairs);
-							  		console.log(result);
-
-							  		// Construct the Keywords vs. Sentiment Scores graph
-								  	var w = 480,
-								    h = 300,
-								    pad = 20,
-								    left_pad = 100;
-
-								    var svg = d3.select("#viz")
-								        .append("svg")
-								        .attr("width", w)
-								        .attr("height", h);
-
-							        var x = d3.scale.linear().domain([-1, 1]).range([left_pad, w-pad]),
-	    							y = d3.scale.linear().domain([0, 5]).range([pad, h-pad]);
-
-	    							var xAxis = d3.svg.axis().scale(x).orient("bottom"),
-	    							yAxis = d3.svg.axis().scale(y).orient("left");
-
-								   	
-							    	yAxis = d3.svg.axis().scale(y).orient("left")
-								        .ticks(5)
-								        .tickFormat(function (d, i) {
-								            return keywords[d];
-								        });
-
-	    							svg.append("g")
-									    .attr("class", "axis")
-									    .attr("transform", "translate(0, "+(h-pad)+")")
-									    .call(xAxis);
-								 
-									svg.append("g")
-									    .attr("class", "axis")
-									    .attr("transform", "translate("+(left_pad-pad)+", 0)")
-									    .call(yAxis);
-
-									// // add y-axis label
-								 //    svg.append("text")
-								 //    	.attr("text-anchor", "middle")
-         //    							.attr("transform", "translate("+ (pad/2) +","+(h)+")rotate(-90)")  
-         //    							.text("Keywords");
-
-         //    						// add x-axis label
-         //    						svg.append("text")
-							  //           .attr("text-anchor", "middle")
-							  //           .attr("transform", "translate("+ (w/2) +","+(h)+")")
-							  //           .text("Tweet Sentiment");
-
-							        //   svg.append("text")
-									      // .attr("class", "title")
-									      // .attr("x", w/2)
-									      // .attr("y", 0 - (margin.top / 2))
-									      // .attr("text-anchor", "middle")
-									      // .text("Testing");
-
-								 	var i, x, y = pad;
-								    for (i = 0; i < 5; i++) {
-								    	x = (keywords_pairs[i][1] + 1) * (w-left_pad)/2 + left_pad;
-								    	console.log(x);
-								    	svg.append('circle')
-									    .attr('cx', x)
-									    .attr('cy', y)
-									    .attr('r', 10);
-
-									    y += 50;
-								    }
-
-								    // simultaneously handle the political spectrum graph
-
-							  		var number = getSpectrum(handleID);
-							  		number = JSON.parse(number);
-
-							  		// $("#loadingimg").hide();
-							  		$("#viz2").empty();
-
-								  	var w = 480,
-								    h = 300,
-								    pad = 20,
-								    left_pad = 100;
-
-								    console.log(number);
-
-								    var svg = d3.select("#viz2")
-								        .append("svg")
-								        .attr("width", w)
-								        .attr("height", h);
-
-							        var x = d3.scale.linear().domain([1, 24]).range([left_pad, w-pad]),
-	    							y = d3.scale.linear().domain([0, 1]).range([pad, h-pad]);
-
-	    							var xAxis = d3.svg.axis().scale(x).orient("bottom"),
-	    							yAxis = d3.svg.axis().scale(y).orient("left");
-
-
-							    	// yAxis = d3.svg.axis().scale(y).orient("left")
-								    //     .ticks(0);
-
-		    						svg.append("g")
-									    .attr("class", "axis")
-									    .attr("transform", "translate(0, "+(h-pad)+")")
-									    .call(xAxis);
-								 
-									// svg.append("g")
-									//     .attr("class", "axis")
-									//     .attr("transform", "translate("+(left_pad-pad)+", 0)")
-									//     .call(yAxis);
-
-								    // // add y-axis label
-								    // svg.append("text")
-								    // 	.attr("text-anchor", "middle")
-            // 							.attr("transform", "translate("+ (pad/2) +","+(h/2)+")rotate(-90)")  
-            // 							.text("Keywords");
-
-            // 						// add x-axis label
-            // 						svg.append("text")
-							     //        .attr("text-anchor", "middle")
-							     //        .attr("transform", "translate("+ (w/2) +","+(h-(pad/3))+")")
-							     //        .text("Tweet Sentiment");
-
-								 	w = number*16 + 75
-								 	svg.append('circle')
-								 	.attr('cx', w)
-								 	.attr('cy', (h-pad)-50)
-								 	.attr('r', 10) 	
-								});								
-							  </script>
 							  <!-- Adding sample twitter feed -->							
 							  <!-- <a class="twitter-timeline" data-width="500" data-height="300" href="https://twitter.com/SenSanders?ref_src=twsrc%5Etfw">Tweets by SenSanders</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>  -->
 							  <style>
@@ -305,6 +99,192 @@
 			</section>
 
 		<!-- Scripts -->
+			<script type="text/javascript">
+			  	function getKeyWords(input) {
+			  		var jqXHR = $.ajax({
+			  			type: "POST",
+			  			url: "/keywords",
+			  			async: false,
+			  			data: { 'username' : input },
+			  		});
+			  		return jqXHR.responseText;
+			  	}
+			  	function getSpectrum(param) {
+			  		var ajax2 = $.ajax({
+			  			type: "POST",
+			  			url: "/spectrum",
+			  			async: false,
+			  			data: { 'username' : param },
+			  		});
+			  		return ajax2.responseText;
+			  	}
+			  	$("#loadingimg").hide();
+			  	$('#handleButton').click(function() {
+			  		// show loading img
+			  		// $("#loadingimg").show();
+			  		
+			  		// get inputted handle
+			  		var handleID = document.getElementById('handleID').value;
+			  		if (handleID.length === 0) {
+			  			// $("#loadingimg").hide();
+			  			alert("Invalid Handle");
+			  			return;
+			  		}
+			  		if (handleID.substring(0,1) === "@") {
+		  				handleID = handleID.substring(1);
+		  			}
+
+		  			// retrieve keywords
+			  		var result = getKeyWords(handleID);
+			  		result = JSON.parse(result);
+
+			  		// hide/clear relevant fields
+			  		// $("#loadingimg").hide();
+			  		$("#viz").empty();
+
+			  		// Access keywords/sentiments returned by getKeywords
+
+			  		var keywords_pairs = [];
+			  		var keywords = Object.keys(result);
+			  		for (var i = 0; i < 5; i++) {
+			  			keywords_pairs.push([keywords[i], result[keywords[i]]]);
+			  		}
+			  		console.log(keywords);
+			  		console.log(keywords_pairs);
+			  		console.log(result);
+
+			  		// Construct the Keywords vs. Sentiment Scores graph
+				  	var w = 480,
+				    h = 300,
+				    pad = 20,
+				    left_pad = 100;
+
+				    var svg = d3.select("#viz")
+				        .append("svg")
+				        .attr("width", w)
+				        .attr("height", h);
+
+			        var x = d3.scale.linear().domain([-1, 1]).range([left_pad, w-pad]),
+					y = d3.scale.linear().domain([0, 5]).range([pad, h-(pad*2)]);
+
+					var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+					yAxis = d3.svg.axis().scale(y).orient("left");
+
+				   	
+			    	yAxis = d3.svg.axis().scale(y).orient("left")
+				        .ticks(5)
+				        .tickFormat(function (d, i) {
+				            return keywords[d];
+				        });
+
+					svg.append("g")
+					    .attr("class", "axis")
+					    .attr("transform", "translate(0, "+(h-pad*2)+")")
+					    .call(xAxis);
+				 
+					svg.append("g")
+					    .attr("class", "axis")
+					    .attr("transform", "translate("+(left_pad-pad)+", 0)")
+					    .call(yAxis);
+
+					// add y-axis label
+				    svg.append("text")
+				    	.attr("text-anchor", "middle")
+						.attr("transform", "translate("+ (3*pad/4) +","+(h/2)+")rotate(-90)")  
+						.text("Keywords");
+
+					// add x-axis label
+					svg.append("text")
+			            .attr("text-anchor", "middle")
+			            .attr("transform", "translate("+ (w/2) +","+(h)+")")
+			            .text("Tweet Sentiment");
+
+				 	var i, x, y = pad;
+				    for (i = 0; i < 5; i++) {
+				    	x = (keywords_pairs[i][1] + 1) * (w-left_pad)/2 + left_pad;
+				    	console.log(x);
+				    	svg.append('circle')
+					    .attr('cx', x)
+					    .attr('cy', y)
+					    .attr('r', 10);
+
+					    y += 47;
+				    }
+
+				    // simultaneously handle the political spectrum graph
+
+			  		var number = getSpectrum(handleID);
+			  		number = JSON.parse(number);
+
+			  		// $("#loadingimg").hide();
+			  		$("#viz2").empty();
+
+				  	var w = 480,
+				    h = 300,
+				    pad = 20,
+				    left_pad = 100;
+
+				    console.log(number);
+
+				    var svg = d3.select("#viz2")
+				        .append("svg")
+				        .attr("width", w)
+				        .attr("height", h);
+
+			        var x = d3.scale.linear().domain([1, 24]).range([left_pad, w-pad]),
+					y = d3.scale.linear().domain([0, 1]).range([pad, h-pad]);
+
+					var xAxis = d3.svg.axis().scale(x).orient("bottom"),
+					yAxis = d3.svg.axis().scale(y).orient("left");
+
+
+			    	// yAxis = d3.svg.axis().scale(y).orient("left")
+				    //     .ticks(0);
+
+					svg.append("g")
+					    .attr("class", "axis")
+					    .attr("transform", "translate(0, "+(h-pad)+")")
+					    .call(xAxis);
+
+					svg.append("text")
+				      .attr("class", "title")
+				      .attr("x", w/2 + pad)
+				      .attr("y", h-(5*pad))
+				      .attr("text-anchor", "middle")
+				      .text("Political Spectrum (DEM < 7, REP > 7)");
+
+				 	w = number*16 + 80
+				 	svg.append('circle')
+				 	.attr('cx', w)
+				 	.attr('cy', (h-pad))
+				 	.attr('r', 10) 	
+					// Add a twitter feed next to the response box
+				 	var strurl = "https://twitter.com/" + handleID;
+				 	console.log(strurl)
+				 	var currentDiv = document.getElementById("currentDiv");
+				 	$("#siblingDiv").empty();
+				 	var siblingDiv = document.getElementById("siblingDiv");
+				 	siblingDiv.setAttribute("style", "float: right;");
+
+				 	var a = document.createElement("a");
+				 	a.setAttribute("id", "tweets");
+				 	a.setAttribute("class", "twitter-timeline");
+				 	a.setAttribute("data-width", "500px");
+				 	a.setAttribute("data-height", "400px");
+					a.setAttribute("data-theme", "light");
+					a.href = strurl;
+					siblingDiv.appendChild(a);
+
+					var s = document.createElement('script');
+			 		var parentDiv = document.getElementById("parentDiv");
+					s.type = 'text/javascript';
+					s.async = true;
+					s.src = "//platform.twitter.com/widgets.js";
+					s.charset = "utf-8";
+					siblingDiv.appendChild(s);
+					twttr.widgets.load();
+				});										
+			  </script>
 			<script src="static/js/jquery.min.js"></script>
 			<script src="static/js/jquery.scrolly.min.js"></script>
 			<script src="static/js/skel.min.js"></script>
